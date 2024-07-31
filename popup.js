@@ -13,6 +13,8 @@ document.getElementById('extractLinksButton').addEventListener('click', () => {
             (response) => {
               if (response && response.urls) {
                 displayLinks(response.urls);
+              } else if (response && response.message) {
+                displayMessage(response.message);
               } else {
                 console.log('No new followers found.');
               }
@@ -51,4 +53,9 @@ async function displayLinks(followersData) {
   } else {
     outputDiv.innerHTML = 'No new followers found.';
   }
+}
+
+function displayMessage(message) {
+  const outputDiv = document.getElementById('output');
+  outputDiv.innerHTML = message;
 }

@@ -5,7 +5,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       let storedLink = result.mostRecentFollower || null;
       let dialogDiv = document.querySelector('div[role="dialog"]');
       let followersData = new Set();
-      let foundStoredLink = false;
 
       console.log('Stored link:', storedLink);
 
@@ -19,7 +18,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.log(fullLink);
 
             if (fullLink === storedLink) {
-              foundStoredLink = true;
               break;
             }
 
@@ -37,7 +35,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         console.log(followersData);
 
-        if (!foundStoredLink && followersData.size > 0) {
+        if (followersData.size > 0) {
           let mostRecentFollowerLink = JSON.parse(Array.from(followersData)[0]);
           chrome.storage.local.set({ mostRecentFollower: mostRecentFollowerLink.link }, () => {
             console.log('Most recent follower link updated:', mostRecentFollowerLink.link);
@@ -47,7 +45,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
       } else {
-        console.error('Dialog box not found. Make sure it is open.');
+        sendResponse({ message: 'Dialog box not found. Make sure it is open.' });
       }
 
       const followersArray = Array.from(followersData).map(follower => JSON.parse(follower));
